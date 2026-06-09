@@ -117,13 +117,27 @@ cron.schedule('0 7 * * *', () => {
 
 // CỔNG API PHỤC VỤ CHO BIỂU ĐỒ FRONTEND (Trả toàn bộ các đài trong ngày)
 app.get('/api/predictions', async (req, res) => {
-    try {
-        const rawData = await runPythonScript('du_doan.py'); 
-        res.json(JSON.parse(rawData));
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.toString() });
-    }
+    console.log("📡 [API] Nhận yêu cầu dữ liệu dự đoán từ frontend...");
 });
+
+const { exec } = require('child_process');
+
+// Hàm ra lệnh cho server tự động nạp dữ liệu mới lên GitHub
+const autoPushToGitHub = () => {
+    return new Promise((resolve, reject) => {
+        // Chuỗi lệnh: Thêm file mới -> Commit kèm ngày tháng -> Push thẳng lên GitHub
+        const cmd = 'git add ../frontend/js/dashboard_data.js && git commit -m "Robot: Cap nhat du lieu ngay moi" && git push';
+        
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.error("Lỗi tự động push GitHub:", error);
+                return reject(error);
+            }
+            console.log("🚀 [GITHUB] Đã tự động đẩy dữ liệu mới lên GitHub Pages thành công!");
+            resolve(stdout);
+        });
+    });
+};
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Node MLOps Backend đang kích hoạt tại Port ${PORT}`));
