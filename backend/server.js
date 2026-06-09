@@ -115,16 +115,44 @@ cron.schedule('0 7 * * *', () => {
     timezone: "Asia/Ho_Chi_Minh"
 });
 
+// API KIỂM TRA TRẠNG THÁI SERVER (Health Check)
+app.get('/ping', (req, res) => {
+    console.log(`[${new Date().toLocaleString()}] -> Có lượt kiểm tra trạng thái từ thiết bị khách (Ping)!`);
+    res.json({ 
+        success: true, 
+        status: "Server đang chạy online ngon lành!", 
+        timestamp: new Date().toISOString() 
+    });
+});
+
 // CỔNG API PHỤC VỤ CHO BIỂU ĐỒ FRONTEND (Trả toàn bộ các đài trong ngày)
 app.get('/api/predictions', async (req, res) => {
+    const requestTime = new Date().toLocaleString();
     try {
-        console.error("đã vào API /api/predictions, đang gọi Python để lấy dữ liệu dự đoán...");
+        // Thay thành console.log để ghi nhận tiến trình bình thường
+        console.log(`[${requestTime}] -> 📥 Đã nhận yêu cầu gọi API /api/predictions`);
+        console.log(`[${requestTime}] -> 🐍 Đang kích hoạt tiến trình con chạy file 'du_doan.py'...`);
+        
         const rawJson = await runPythonScript('du_doan.py');
+        
+        // Kiểm tra xem dữ liệu Python trả về có bị rỗng không
+        if (!rawJson || rawJson.trim() === "") {
+            throw new Error("File Python 'du_doan.py' chạy nhưng không xuất ra dữ liệu JSON.");
+        }
+
         const data = JSON.parse(rawJson);
+        console.log(`[${new Date().toLocaleString()}] -> 📤 Chạy Python xong! Đã trả về dữ liệu thành công cho Frontend.`);
+        
         res.json(data);
     } catch (err) {
+        // CỰC KỲ QUAN TRỌNG: In chi tiết lỗi gốc ra màn hình Terminal của server (Render) để debug
+        console.error(`[${new Date().toLocaleString()}] ❌ LỖI API /api/predictions:`, err.message || err);
         
-        res.status(500).json({ success: false, error: 'Lỗi máy chủ khi lấy dữ liệu dự đoán.' });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Lỗi máy chủ khi lấy dữ liệu dự đoán.',
+            details: err.message || String(err) // Gửi kèm thông tin lỗi ngắn gọn về client nếu muốn kiểm tra nhanh
+        });
     }
 });
 
