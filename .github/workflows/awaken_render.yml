@@ -1,17 +1,15 @@
 name: Watchdog - Danh thuc Render moi ngay
 
-# Thiết lập lịch chạy tự động cho GitHub
 on:
   schedule:
-    # 23:45 UTC tương đương với 06:45 sáng giờ Việt Nam (GMT+7)
-    # GitHub sẽ gọi trước 15 phút để Render có thời gian khởi động và thức giấc hẳn lúc 7h00
     - cron: '45 23 * * *'
-  workflow_dispatch: # Tính năng cho phép bạn bấm nút chạy thử thủ công bất kỳ lúc nào
+  workflow_dispatch:
 
 jobs:
   ping-server:
     runs-on: ubuntu-latest
+
     steps:
-      name: Gui tin hieu Ping toi Render
-      run: |
-        curl -I "https://du-doan-ket-qua-xskt.onrender.com"
+      - name: Gui tin hieu Ping toi Render
+        run: |
+          curl -I "https://du-doan-ket-qua-xskt.onrender.com"        
