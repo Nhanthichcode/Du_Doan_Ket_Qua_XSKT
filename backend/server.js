@@ -12,7 +12,7 @@ app.use(express.json());
 // Hàm gọi các file Python đồng bộ theo tên file thực tế của bạn
 const runPythonScript = (scriptName, args = []) => {
     return new Promise((resolve, reject) => {
-        console.log(`⏳ Node.js đang gọi tiến trình Python: ${scriptName} ${args.join(' ')}`);
+        console.log(`Node.js đang gọi tiến trình Python: ${scriptName} ${args.join(' ')}`);
         const pythonProcess = spawn('python', [scriptName, ...args]);
         let output = '';
         let error = '';
