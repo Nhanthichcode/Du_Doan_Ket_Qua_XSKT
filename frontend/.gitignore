@@ -1,0 +1,4 @@
+node_modules/
+.env
+model_xsmn_predict.pkl
+xsmn_bosung.csv
