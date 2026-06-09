@@ -117,7 +117,15 @@ cron.schedule('0 7 * * *', () => {
 
 // CỔNG API PHỤC VỤ CHO BIỂU ĐỒ FRONTEND (Trả toàn bộ các đài trong ngày)
 app.get('/api/predictions', async (req, res) => {
-    console.log("[API] Nhận yêu cầu dữ liệu dự đoán từ frontend...");
+    try {
+        console.error("đã vào API /api/predictions, đang gọi Python để lấy dữ liệu dự đoán...");
+        const rawJson = await runPythonScript('du_doan.py');
+        const data = JSON.parse(rawJson);
+        res.json(data);
+    } catch (err) {
+        
+        res.status(500).json({ success: false, error: 'Lỗi máy chủ khi lấy dữ liệu dự đoán.' });
+    }
 });
 
 const { exec } = require('child_process');
