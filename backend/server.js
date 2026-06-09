@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require('.pnpm/express@5.2.1/node_modules/express');
 const { spawn } = require('child_process');
-const nodemailer = require('nodemailer');
+const nodemailer = require('.pnpm/nodemailer@8.0.10/node_modules/nodemailer');
 const cron = require('node-cron');
-const cors = require('cors');
+const cors = require('.pnpm/cors@2.8.6/node_modules/cors');
 require('dotenv').config();
 
 const app = express();
