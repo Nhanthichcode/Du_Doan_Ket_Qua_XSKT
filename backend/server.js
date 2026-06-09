@@ -117,7 +117,7 @@ cron.schedule('0 7 * * *', () => {
 
 // CỔNG API PHỤC VỤ CHO BIỂU ĐỒ FRONTEND (Trả toàn bộ các đài trong ngày)
 app.get('/api/predictions', async (req, res) => {
-    console.log("📡 [API] Nhận yêu cầu dữ liệu dự đoán từ frontend...");
+    console.log("[API] Nhận yêu cầu dữ liệu dự đoán từ frontend...");
 });
 
 const { exec } = require('child_process');
