@@ -4,7 +4,7 @@
       "dai": "Bến Tre",
       "predictions": [
         {
-          "so": "67",
+          "so": "87",
           "xac_suat": 72.4
         },
         {
@@ -12,7 +12,7 @@
           "xac_suat": 58.1
         },
         {
-          "so": "27",
+          "so": "95",
           "xac_suat": 44.9
         }
       ]
@@ -21,15 +21,15 @@
       "dai": "Bạc Liêu",
       "predictions": [
         {
-          "so": "52",
+          "so": "77",
           "xac_suat": 72.4
         },
         {
-          "so": "20",
+          "so": "96",
           "xac_suat": 58.1
         },
         {
-          "so": "46",
+          "so": "63",
           "xac_suat": 44.9
         }
       ]
@@ -38,15 +38,15 @@
       "dai": "Vũng Tàu",
       "predictions": [
         {
-          "so": "35",
+          "so": "00",
           "xac_suat": 72.4
         },
         {
-          "so": "65",
+          "so": "72",
           "xac_suat": 58.1
         },
         {
-          "so": "98",
+          "so": "32",
           "xac_suat": 44.9
         }
       ]
