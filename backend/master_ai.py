@@ -6,23 +6,30 @@ from sklearn.ensemble import RandomForestClassifier
 
 def train_model():
     try:
-        input_csv = 'data_training_ai.csv'
+        # Đường dẫn tuyệt đối an toàn khi chạy ngầm trên Render
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        input_csv = os.path.join(BASE_DIR, 'data_training_ai.csv')
+        
         if not os.path.exists(input_csv):
             print(json.dumps({"success": False, "error": f"Không tìm thấy file {input_csv}"}))
             return
 
+        # 1. Đọc dữ liệu đã chế biến ở Bước 2
         df = pd.read_csv(input_csv)
         
-        # Đồng bộ tập tính năng 5 cột tương thích với file data_training_ai.csv 85MB của bạn
-        features = ['So', 'Gap', 'Freq_10', 'Freq_30', 'Was_Last']
-        target_col = 'Target' if 'Target' in df.columns else 'Label'
+        # 2. ĐỒNG BỘ 8 CỘT (Khớp 100% với file du_doan.py và chuyen_thanh_du_lieu_huan_luyen.py)
+        features = ['So', 'Thu', 'Gap', 'F5', 'F10', 'F30', 'H_Freq', 'T_Freq']
+        target_col = 'Label' if 'Label' in df.columns else 'Target'
 
-        if target_col not in df.columns:
-            print(json.dumps({"success": False, "error": f"Không tìm thấy cột nhãn trong file dữ liệu."}))
+        # Kiểm tra bảo vệ lỗi: Đảm bảo dữ liệu đổ ra đủ 8 cột
+        missing_cols = [col for col in features if col not in df.columns]
+        if missing_cols:
+            print(json.dumps({"success": False, "error": f"Dữ liệu huấn luyện bị thiếu cột: {missing_cols}"}))
             return
 
+        # 3. Kích hoạt huấn luyện
         model = RandomForestClassifier(
-            n_estimators=150, 
+            n_estimators=100, 
             max_depth=15, 
             min_samples_leaf=3, 
             class_weight='balanced', 
@@ -32,15 +39,16 @@ def train_model():
         
         model.fit(df[features], df[target_col])
         
-        model_name = 'model_xsmn_predict.pkl'
+        # 4. Xuất file mô hình .pkl để Bước 4 dùng
+        model_name = os.path.join(BASE_DIR, 'model_xsmn_predict.pkl')
         joblib.dump(model, model_name, compress=3)
         
         print(json.dumps({
             "success": True,
-            "message": "Huấn luyện mô hình thành công!",
+            "message": "Huấn luyện mô hình chuẩn 8 cột thành công!",
             "used_features": features,
             "file_size_mb": round(os.path.getsize(model_name) / (1024 * 1024), 2)
-        }, ensure_ascii=False))
+        }))
 
     except Exception as e:
         print(json.dumps({"success": False, "error": str(e)}))
