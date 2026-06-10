@@ -49,9 +49,12 @@ const autoPushToGitHub = () => {
             return resolve("Bỏ qua Git Push");
         }
 
-        // Thiết lập danh tính Bot và ghép Token vào đường dẫn để có quyền Push
+        // Thiết lập danh tính Bot 
         const configCmd = `git config --global user.email "bot-mlops@render.com" && git config --global user.name "MLOps Robot"`;
-        const pushCmd = `git add ../frontend/js/dashboard_data.js && git commit -m "Robot: Tự động cập nhật dữ liệu ngày mới" && git push https://${token}@github.com/${user}/${repo}.git HEAD:main`;
+        
+        // SỬA LỖI TẠI ĐÂY: Thêm lệnh "git pull ... --rebase" để đồng bộ code cũ của bạn trước khi push
+        const repoUrl = `https://${token}@github.com/${user}/${repo}.git`;
+        const pushCmd = `git add ../frontend/js/dashboard_data.js && git commit -m "Robot: Tự động cập nhật dữ liệu ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
         
         exec(`${configCmd} && ${pushCmd}`, (error, stdout, stderr) => {
             if (error) {
