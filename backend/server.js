@@ -134,11 +134,18 @@ const runDailyMLOpsPipeline = async () => {
 // -------------------------------------------------------------------
 const sendMailReport = async (data) => {
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: { 
-            user: process.env.EMAIL_USER, 
-            pass: process.env.EMAIL_PASS 
-        }
+    host: 'smtp.gmail.com',
+    port: 465,           // Chuyển sang cổng 465 (Bảo mật SSL) thay vì cổng mặc định
+    secure: true,        // Bắt buộc dùng mã hóa
+    auth: { 
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS 
+    },
+    tls: {
+        // Giúp vượt qua các rào cản kiểm tra chứng chỉ SSL nội bộ của Render
+        rejectUnauthorized: false
+    },
+    connectionTimeout: 10000 // Thêm 10 giây chờ kết nối để tránh sập app nếu mạng trễ
     });
 
     let htmlBody = `<h2 style="color: #2c3e50;">HỆ THỐNG MLOPS XSMN BÁO CÁO TỰ ĐỘNG</h2>`;
