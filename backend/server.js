@@ -224,6 +224,30 @@ app.get('/api/predictions', async (req, res) => {
     }
 });
 
+app.get('/test/mail', async (req, res) => {
+    try {
+        console.log("🛠️ [TEST] Đang gửi thử Email báo cáo mẫu...");
+        // Bơm một data giả để test format Email
+        const mockData = {
+            success: true,
+            thu: 5,
+            ngay_du_doan: "10/06/2026",
+            results: [{
+                dai: "tây ninh",
+                ngay_cap_nhat_cu: "03/06/2026",
+                predictions: [
+                    { so: "68", xac_suat: 75.5 },
+                    { so: "39", xac_suat: 60.2 },
+                    { so: "79", xac_suat: 55.1 }
+                ]
+            }]
+        };
+        await sendMailReport(mockData);
+        res.json({ success: true, message: "Đã gửi mail test thành công!" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message || err });
+    }
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log("======================================================================");
