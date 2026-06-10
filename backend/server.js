@@ -38,7 +38,7 @@ const runPythonScript = (scriptName, args = []) => {
 // -------------------------------------------------------------------
 const autoPushToGitHub = () => {
     return new Promise((resolve, reject) => {
-        console.log(`[${new Date().toLocaleString()}] 🚀 [GITHUB] Đang chuẩn bị đồng bộ dữ liệu tĩnh lên GitHub...`);
+        console.log(`[${new Date().toLocaleString()}] 🚀 [GITHUB] Đang chuẩn bị đồng bộ toàn bộ dữ liệu lên GitHub...`);
         
         const token = process.env.GITHUB_TOKEN;
         const user = process.env.GITHUB_USER;
@@ -49,19 +49,19 @@ const autoPushToGitHub = () => {
             return resolve("Bỏ qua Git Push");
         }
 
-        // Thiết lập danh tính Bot 
+        // Thiết lập danh tính Bot
         const configCmd = `git config --global user.email "bot-mlops@render.com" && git config --global user.name "MLOps Robot"`;
-        
-        // SỬA LỖI TẠI ĐÂY: Thêm lệnh "git pull ... --rebase" để đồng bộ code cũ của bạn trước khi push
         const repoUrl = `https://${token}@github.com/${user}/${repo}.git`;
-        const pushCmd = `git add ../frontend/js/dashboard_data.js && git commit -m "Robot: Tự động cập nhật dữ liệu ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
+        
+        // SỬA LỖI TẠI ĐÂY: Dùng "git add -A" để gom tất cả các file vừa bị Python thay đổi (CSV, JSON, JS, PKL)
+        const pushCmd = `git add -A && git commit -m "Robot: Tự động cập nhật dữ liệu MLOps ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
         
         exec(`${configCmd} && ${pushCmd}`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`[${new Date().toLocaleString()}] ❌ Lỗi tự động push GitHub:`, stderr || error);
                 return reject(error);
             }
-            console.log(`[${new Date().toLocaleString()}] ✅ [GITHUB] Đã đẩy file dashboard_data.js mới lên GitHub Pages thành công!`);
+            console.log(`[${new Date().toLocaleString()}] ✅ [GITHUB] Đã đẩy thành công toàn bộ dữ liệu mới lên GitHub!`);
             resolve(stdout);
         });
     });
