@@ -5,6 +5,9 @@ const cron = require('node-cron');
 const cors = require('cors');
 require('dotenv').config();
 
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -54,7 +57,7 @@ const autoPushToGitHub = () => {
         const repoUrl = `https://${token}@github.com/${user}/${repo}.git`;
         
         // SỬA LỖI TẠI ĐÂY: Dùng "git add -A" để gom tất cả các file vừa bị Python thay đổi (CSV, JSON, JS, PKL)
-        const pushCmd = `git add -A && git commit -m "Robot: Tự động cập nhật dữ liệu MLOps ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
+        const pushCmd = `git add ../frontend/js/dashboard_data.js xsmn_tong_hop_20_nam.csv model_xsmn_predict.pkl data_training_ai.csv && git commit -m "Robot: Tự động cập nhật dữ liệu MLOps ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
         
         exec(`${configCmd} && ${pushCmd}`, (error, stdout, stderr) => {
             if (error) {
