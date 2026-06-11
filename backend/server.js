@@ -52,12 +52,12 @@ const autoPushToGitHub = () => {
             return resolve("Bỏ qua Git Push");
         }
 
-        // Thiết lập danh tính Bot
         const configCmd = `git config --global user.email "bot-mlops@render.com" && git config --global user.name "MLOps Robot"`;
         const repoUrl = `https://${token}@github.com/${user}/${repo}.git`;
         
-        // SỬA LỖI TẠI ĐÂY: Dùng "git add -A" để gom tất cả các file vừa bị Python thay đổi (CSV, JSON, JS, PKL)
-        const pushCmd = `git add ../frontend/js/dashboard_data.js xsmn_tong_hop_20_nam.csv model_xsmn_predict.pkl data_training_ai.csv && git commit -m "Robot: Tự động cập nhật dữ liệu MLOps ngày mới" && git pull ${repoUrl} main --rebase && git push ${repoUrl} HEAD:main`;
+        // CHỈ ĐỊNH RÕ 4 FILE CẦN LƯU VÀ DÙNG --AUTOSTASH ĐỂ CHỐNG KẸT LỆNH PULL
+        const filesToAdd = `../frontend/js/dashboard_data.js xsmn_tong_hop_20_nam.csv model_xsmn_predict.pkl data_training_ai.csv`;
+        const pushCmd = `git add ${filesToAdd} && (git commit -m "Robot: Tự động cập nhật dữ liệu MLOps ngày mới" || true) && git pull ${repoUrl} main --rebase --autostash && git push ${repoUrl} HEAD:main`;
         
         exec(`${configCmd} && ${pushCmd}`, (error, stdout, stderr) => {
             if (error) {
