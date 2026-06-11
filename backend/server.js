@@ -117,8 +117,8 @@ const runDailyMLOpsPipeline = async () => {
         console.log("✅ Hoàn thành Bước 6.");
 
         // Gửi báo cáo Email
-        console.log("\n✉️ Đang tổng hợp dữ liệu để soạn thư gửi báo cáo MLOps...");
-        await sendMailReport(data);
+        // console.log("\n✉️ Đang tổng hợp dữ liệu để soạn thư gửi báo cáo MLOps...");
+        // await sendMailReport(data);
         
         const durationSec = Math.round((Date.now() - startTime) / 1000);
         console.log("\n======================================================================");
@@ -135,63 +135,63 @@ const runDailyMLOpsPipeline = async () => {
 // -------------------------------------------------------------------
 // 4. HÀM GỬI EMAIL BÁO CÁO
 // -------------------------------------------------------------------
-const sendMailReport = async (data) => {
-    let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,           // Chuyển sang cổng 465 (Bảo mật SSL) thay vì cổng mặc định
-    secure: true,        // Bắt buộc dùng mã hóa
-    auth: { 
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS 
-    },
-    tls: {
-        // Giúp vượt qua các rào cản kiểm tra chứng chỉ SSL nội bộ của Render
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 10000 // Thêm 10 giây chờ kết nối để tránh sập app nếu mạng trễ
-    });
+// const sendMailReport = async (data) => {
+//     let transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 465,           // Chuyển sang cổng 465 (Bảo mật SSL) thay vì cổng mặc định
+//     secure: true,        // Bắt buộc dùng mã hóa
+//     auth: { 
+//         user: process.env.EMAIL_USER, 
+//         pass: process.env.EMAIL_PASS 
+//     },
+//     tls: {
+//         // Giúp vượt qua các rào cản kiểm tra chứng chỉ SSL nội bộ của Render
+//         rejectUnauthorized: false
+//     },
+//     connectionTimeout: 10000 // Thêm 10 giây chờ kết nối để tránh sập app nếu mạng trễ
+//     });
 
-    let htmlBody = `<h2 style="color: #2c3e50;">HỆ THỐNG MLOPS XSMN BÁO CÁO TỰ ĐỘNG</h2>`;
+//     let htmlBody = `<h2 style="color: #2c3e50;">HỆ THỐNG MLOPS XSMN BÁO CÁO TỰ ĐỘNG</h2>`;
     
-    if (data.success) {
-        htmlBody += `<p><b>Dự đoán lịch quay:</b> Thứ ${data.thu} (Ngày ${data.ngay_du_doan})</p>`;
-        htmlBody += `<p style="color: #27ae60; font-weight: bold;">Hôm nay hệ thống phát hiện có ${data.results.length} đài mở thưởng.</p>`;
-        htmlBody += `<hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;"/>`;
+//     if (data.success) {
+//         htmlBody += `<p><b>Dự đoán lịch quay:</b> Thứ ${data.thu} (Ngày ${data.ngay_du_doan})</p>`;
+//         htmlBody += `<p style="color: #27ae60; font-weight: bold;">Hôm nay hệ thống phát hiện có ${data.results.length} đài mở thưởng.</p>`;
+//         htmlBody += `<hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;"/>`;
 
-        data.results.forEach(daiResult => {
-            htmlBody += `<div style="margin-bottom: 25px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">`;
-            htmlBody += `<h3 style="color: #2980b9; margin-top:0; letter-spacing: 1px;">🔮 ĐÀI: ${daiResult.dai.toUpperCase()}</h3>`;
-            htmlBody += `<p style="font-size: 12px; color: #7f8c8d; margin-bottom: 10px;">Dữ liệu lịch sử cập nhật: ${daiResult.ngay_cap_nhat_cu}</p>`;
-            htmlBody += `<ul style="list-style-type: none; padding-left: 0;">`;
+//         data.results.forEach(daiResult => {
+//             htmlBody += `<div style="margin-bottom: 25px; background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">`;
+//             htmlBody += `<h3 style="color: #2980b9; margin-top:0; letter-spacing: 1px;">🔮 ĐÀI: ${daiResult.dai.toUpperCase()}</h3>`;
+//             htmlBody += `<p style="font-size: 12px; color: #7f8c8d; margin-bottom: 10px;">Dữ liệu lịch sử cập nhật: ${daiResult.ngay_cap_nhat_cu}</p>`;
+//             htmlBody += `<ul style="list-style-type: none; padding-left: 0;">`;
             
-            daiResult.predictions.forEach(p => {
-                htmlBody += `<li style="padding: 6px 0; border-bottom: 1px dashed #eee;">`;
-                htmlBody += `Cặp số vàng: <b style="font-size:18px; color: #2c3e50;">${p.so}</b> — Xác suất nổ: <span style="color:#e74c3c; font-weight:bold; font-size:16px;">${p.xac_suat}%</span>`;
-                htmlBody += `</li>`;
-            });
+//             daiResult.predictions.forEach(p => {
+//                 htmlBody += `<li style="padding: 6px 0; border-bottom: 1px dashed #eee;">`;
+//                 htmlBody += `Cặp số vàng: <b style="font-size:18px; color: #2c3e50;">${p.so}</b> — Xác suất nổ: <span style="color:#e74c3c; font-weight:bold; font-size:16px;">${p.xac_suat}%</span>`;
+//                 htmlBody += `</li>`;
+//             });
             
-            htmlBody += `</ul></div>`;
-        });
-    } else {
-        htmlBody += `<p style="color: red; font-weight: bold;">Lỗi mô hình: ${data.error}</p>`;
-    }
+//             htmlBody += `</ul></div>`;
+//         });
+//     } else {
+//         htmlBody += `<p style="color: red; font-weight: bold;">Lỗi mô hình: ${data.error}</p>`;
+//     }
 
-    await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_RECEIVER,
-        subject: `[AI BOT] Dự Đoán XSMN Ngày Mới - Thứ ${data.thu} (${data.ngay_du_doan})`,
-        html: htmlBody
-    });
-    console.log("✈️ Thư báo cáo đã được gửi tới hòm thư Gmail của bạn thành công.");
-};
+//     await transporter.sendMail({
+//         from: process.env.EMAIL_USER,
+//         to: process.env.EMAIL_RECEIVER,
+//         subject: `[AI BOT] Dự Đoán XSMN Ngày Mới - Thứ ${data.thu} (${data.ngay_du_doan})`,
+//         html: htmlBody
+//     });
+//     console.log("✈️ Thư báo cáo đã được gửi tới hòm thư Gmail của bạn thành công.");
+// };
 
 // -------------------------------------------------------------------
 // 5. CÁC ĐIỂM KẾT NỐI API & LỊCH CHẠY
 // -------------------------------------------------------------------
 
 // Dự phòng 1: Cron Job nội bộ đề phòng GitHub Actions bị lỗi
-cron.schedule('0 7 * * *', () => {
-    console.log("⏰ [ĐỒNG HỒ NỘI BỘ] Điểm mốc 7h00 sáng, kích hoạt chuỗi tự động...");
+cron.schedule('0 9 * * *', () => {
+    console.log("⏰ [ĐỒNG HỒ NỘI BỘ] Điểm mốc 9h00 sáng, kích hoạt chuỗi tự động...");
     runDailyMLOpsPipeline();
 }, {
     scheduled: true,
@@ -237,30 +237,30 @@ app.get('/api/predictions', async (req, res) => {
     }
 });
 
-app.get('/test/mail', async (req, res) => {
-    try {
-        console.log("🛠️ [TEST] Đang gửi thử Email báo cáo mẫu...");
-        // Bơm một data giả để test format Email
-        const mockData = {
-            success: true,
-            thu: 5,
-            ngay_du_doan: "10/06/2026",
-            results: [{
-                dai: "tây ninh",
-                ngay_cap_nhat_cu: "03/06/2026",
-                predictions: [
-                    { so: "68", xac_suat: 75.5 },
-                    { so: "39", xac_suat: 60.2 },
-                    { so: "79", xac_suat: 55.1 }
-                ]
-            }]
-        };
-        await sendMailReport(mockData);
-        res.json({ success: true, message: "Đã gửi mail test thành công!" });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message || err });
-    }
-});
+// app.get('/test/mail', async (req, res) => {
+//     try {
+//         console.log("🛠️ [TEST] Đang gửi thử Email báo cáo mẫu...");
+//         // Bơm một data giả để test format Email
+//         const mockData = {
+//             success: true,
+//             thu: 5,
+//             ngay_du_doan: "10/06/2026",
+//             results: [{
+//                 dai: "tây ninh",
+//                 ngay_cap_nhat_cu: "03/06/2026",
+//                 predictions: [
+//                     { so: "68", xac_suat: 75.5 },
+//                     { so: "39", xac_suat: 60.2 },
+//                     { so: "79", xac_suat: 55.1 }
+//                 ]
+//             }]
+//         };
+//         await sendMailReport(mockData);
+//         res.json({ success: true, message: "Đã gửi mail test thành công!" });
+//     } catch (err) {
+//         res.status(500).json({ success: false, error: err.message || err });
+//     }
+// });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log("======================================================================");
